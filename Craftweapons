@@ -1,0 +1,621 @@
+local config = {
+	[1] = {name = 'Leather', helmet = 3355, armor = 3361, legs = 3559, boots = 3552, shield = 3445, price = 5000, costhelmet= 11453, costarmor= 28822, costlegs= 11660, costboots= 17826, costshield= 9656, cantreq = 1, costore= 947, cantorereq = 1},
+    [2] = {name = 'Studded', helmet = 3376, armor = 3378, legs = 3362, boots = 3551, shield = 3426, price = 10000, costhelmet= 11453, costarmor= 28822, costlegs= 11660, costboots= 17826, costshield= 9656, cantreq = 5, costore= 947, cantorereq = 5},
+    [3] = {name = 'Tusk', helmet = 7458, armor = 7463, legs = 7464, boots = 9020, shield = 3443, price = 15000, costhelmet= 11453, costarmor= 28822, costlegs= 11660, costboots= 17826, costshield= 9656, cantreq = 10, costore= 947, cantorereq = 10},
+    [4] = {name = 'Tribal', helmet = 3403, armor = 3404, legs = 3560, boots = 9017, shield = 3444, price = 20000, costhelmet= 11453, costarmor= 28822, costlegs= 11660, costboots= 17826, costshield= 9656, cantreq = 15, costore= 16135, cantorereq = 1},
+	[5] = {name = 'More equipment will be added in the next updates.'}
+    
+}
+
+local action = Action()
+
+function action.onUse(player, item, fromPos, target, toPos, isHotkey)
+	local menu = ModalWindow{
+		title = "FORGE EQUIPMENT",
+		message = "Choice a Material:"
+	}
+
+	-- local secondMenu = ModalWindow{
+		-- title = "FORGE EQUIPMENT",
+		-- message = "Choice Piece:"
+	-- }
+
+	local thirdMenu = ModalWindow{
+		title = "FORGE EQUIPMENT",
+		message = "Closing Details."
+	}
+	
+	for  x = 1, #config do
+		local material = config[x]
+		menu:addChoice(string.format("%s", material.name), function (player, button, choice)
+			if button.name ~= "Select" then
+				return
+			end
+
+			local secondMenu = ModalWindow{title = "FORGE EQUIPMENT",	message = "Choice Piece from "..material.name..":"}
+			secondMenu:clear()
+			secondMenu:addChoice(string.format("Helmet: %s", getItemName(material.helmet)))
+			secondMenu:addChoice(string.format("Armor: %s", getItemName(material.armor)))
+			secondMenu:addChoice(string.format("Legs: %s", getItemName(material.legs)))
+			secondMenu:addChoice(string.format("Boots: %s", getItemName(material.boots)))
+			secondMenu:addChoice(string.format("Shield: %s", getItemName(material.shield)))
+			
+				secondMenu:addButton("Forge", function (player, button, choice)
+				
+				local selectType = choice.text:match("(.+):"):lower()
+				local itemId = material[selectType]
+				local material2 = config[x-1]
+				if itemId == material.helmet then 
+					if player:getItemCount(material.costhelmet) < material.cantreq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantreq - player:getItemCount(material.costhelmet)).. " "..getItemName(material.costhelmet)..".")
+						return false
+					elseif player:getItemCount(material.costore) < material.cantorereq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore)..".")
+						return false
+					end
+					if material2 ~= nil then
+						if player:getItemCount(material2.helmet) == 0 then 					
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need a "..getItemName(material2.helmet)..".")
+							return false
+						end
+					end
+				elseif itemId == material.armor then 
+					if player:getItemCount(material.costarmor) < material.cantreq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantreq - player:getItemCount(material.costarmor)).. " "..getItemName(material.costarmor)..".")
+						return false
+					elseif player:getItemCount(material.costore) < material.cantorereq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore)..".")
+						return false
+					end
+					if material2 ~= nil then
+						if player:getItemCount(material2.armor) == 0 then 					
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need a "..getItemName(material2.armor)..".")
+							return false
+						end
+					end
+				elseif itemId == material.legs then 
+					if player:getItemCount(material.costlegs) < material.cantreq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantreq - player:getItemCount(material.costlegs)).. " "..getItemName(material.costlegs)..".")
+						return false
+					elseif player:getItemCount(material.costore) < material.cantorereq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore)..".")
+						return false
+					end
+					if material2 ~= nil then
+						if player:getItemCount(material2.legs) == 0 then 					
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need a "..getItemName(material2.legs)..".")
+							return false
+						end
+					end
+				elseif itemId == material.boots then 
+					if player:getItemCount(material.costboots) < material.cantreq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantreq - player:getItemCount(material.costboots)).. " "..getItemName(material.costboots)..".")
+						return false
+					elseif player:getItemCount(material.costore) < material.cantorereq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore)..".")
+						return false
+					end
+					if material2 ~= nil then
+						if player:getItemCount(material2.boots) == 0 then 					
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need a "..getItemName(material2.boots)..".")
+							return false
+						end
+					end
+				elseif itemId == material.shield then 
+					if player:getItemCount(material.costshield) < material.cantreq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantreq - player:getItemCount(material.costshield)).. " "..getItemName(material.costshield)..".")
+						return false
+					elseif player:getItemCount(material.costore) < material.cantorereq then
+						player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+						player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore)..".")
+						return false
+					end
+					if material2 ~= nil then
+						if player:getItemCount(material2.shield) == 0 then 					
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough items to forge this equip.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need a "..getItemName(material2.shield)..".")
+							return false
+						end
+					end
+				end
+				
+				
+					if player:getMoney() < material.price then
+						if player:getBankBalance() < material.price then
+							player:sendTextMessage(MESSAGE_STATUS_WARNING, "You dont have enough money in your backpack or bank account.")
+							player:sendTextMessage(MESSAGE_STATUS_DEFAULT, "You need "..(material.price - player:getMoney()).. " gold coins.")
+							return false
+						else
+							if itemId == material.helmet then 
+									player:setBankBalance(player:getBankBalance() - material.price)
+									player:removeItem(material.costhelmet, material.cantreq)
+									player:removeItem(material.costore, material.cantorereq)
+									if material2 ~= nil then
+										player:removeItem(material2.helmet, 1)
+									end
+									player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+									player:addItem(itemId, 1)
+									
+							elseif itemId == material.armor then
+									player:setBankBalance(player:getBankBalance() - material.price)
+									player:removeItem(material.costarmor, material.cantreq)
+									player:removeItem(material.costore, material.cantorereq)
+									player:removeItem(material2.armor, 1)
+									player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+									player:addItem(itemId, 1)
+									
+							elseif itemId == material.legs then 
+									player:setBankBalance(player:getBankBalance() - material.price)
+									player:removeItem(material.costlegs, material.cantreq)
+									player:removeItem(material.costore, material.cantorereq)
+									player:removeItem(material2.legs, 1)
+									player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+									player:addItem(itemId, 1)
+									
+							elseif itemId == material.boots then 
+									player:setBankBalance(player:getBankBalance() - material.price)
+									player:removeItem(material.costboots, material.cantreq)
+									player:removeItem(material.costore, material.cantorereq)
+									player:removeItem(material2.boots, 1)
+									player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+									player:addItem(itemId, 1)
+									
+							elseif itemId == material.shield then 
+									player:setBankBalance(player:getBankBalance() - material.price)
+									player:removeItem(material.costshield, material.cantreq)
+									player:removeItem(material.costore, material.cantorereq)
+									player:removeItem(material2.shield, 1)
+									player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+									player:addItem(itemId, 1)
+									
+							end
+						end
+					else
+						if itemId == material.helmet then 
+								player:removeItem(material.costhelmet, material.cantreq)
+								player:removeItem(material.costore, material.cantorereq)
+								if material2 ~= nil then
+										player:removeItem(material2.helmet, 1)
+								end
+								player:removeMoney(material.price)
+								player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+								player:addItem(itemId, 1)
+								
+						elseif itemId == material.armor then
+								player:removeItem(material.costarmor, material.cantreq)
+								player:removeItem(material.costore, material.cantorereq)
+								if material2 ~= nil then
+										player:removeItem(material2.armor, 1)
+								end
+								player:removeMoney(material.price)
+								player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+								player:addItem(itemId, 1)
+								
+						elseif itemId == material.legs then 
+								player:removeItem(material.costlegs, material.cantreq)
+								player:removeItem(material.costore, material.cantorereq)
+								if material2 ~= nil then
+										player:removeItem(material2.armor, 1)
+								end
+								player:removeMoney(material.price)
+								player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+								player:addItem(itemId, 1)
+								
+						elseif itemId == material.boots then 
+								player:removeItem(material.costboots, material.cantreq)
+								player:removeItem(material.costore, material.cantorereq)
+								if material2 ~= nil then
+										player:removeItem(material2.boots, 1)
+								end
+								player:removeMoney(material.price)
+								player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+								player:addItem(itemId, 1)
+								
+						elseif itemId == material.shield then 
+								player:removeItem(material.costshield, material.cantreq)
+								player:removeItem(material.costore, material.cantorereq)
+								if material2 ~= nil then
+										player:removeItem(material2.shield, 1)
+								end
+								player:removeMoney(material.price)
+								player:sendTextMessage(MESSAGE_INFO_DESCR, "You buy "..getItemName(itemId)..".")
+								player:addItem(itemId, 1)
+								
+						end
+					end
+				end)
+				
+				secondMenu:addButton("Details", function (player, button, choice)
+				if button.name ~= "Details" then
+					return
+				end
+				
+				-- thirdMenu:clear()
+				-- thirdMenu:addButton("Back", function (player, button, choice)
+					-- secondMenu:sendToPlayer(player)
+				-- end)
+				-- thirdMenu:addButton("Close")
+				secondMenu:sendToPlayer(player)
+
+				local text = ""
+				local selectType = choice.text:match("(.+):"):lower()
+				local itemId = material[selectType]
+				local itemType = ItemType(itemId)
+				local material2 = config[x-1]
+						if itemId == material.helmet then
+								if material.cantreq <= player:getItemCount(material.costhelmet) then
+									txtrema = "Can be forged."
+								else
+									txtrema = (material.cantreq - player:getItemCount(material.costhelmet)).. " "..getItemName(material.costhelmet).." left."
+								end
+								if  material.cantorereq <= player:getItemCount(material.costore) then
+									txtrema2 = "Can be forged."
+								else
+									txtrema2 = (material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore).." left."
+								end
+						elseif itemId == material.armor then
+								if material.cantreq <= player:getItemCount(material.costarmor) then
+									txtrema = "Can be forged."
+								else
+									txtrema = (material.cantreq - player:getItemCount(material.costarmor)).. " "..getItemName(material.costarmor).." left."
+								end
+								if  material.cantorereq <= player:getItemCount(material.costore) then
+									txtrema2 = "Can be forged."
+								else
+									txtrema2 = (material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore).." left."
+								end
+						elseif itemId == material.legs then
+								if material.cantreq <= player:getItemCount(material.costlegs) then
+									txtrema = "Can be forged."
+								else
+									txtrema = (material.cantreq - player:getItemCount(material.costlegs)).. " "..getItemName(material.costlegs).." left."
+								end
+								if  material.cantorereq <= player:getItemCount(material.costore) then
+									txtrema2 = "Can be forged."
+								else
+									txtrema2 = (material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore).." left."
+								end
+						elseif itemId == material.boots then
+								if material.cantreq <= player:getItemCount(material.costboots) then
+									txtrema = "Can be forged."
+								else
+									txtrema = (material.cantreq - player:getItemCount(material.costboots)).. " "..getItemName(material.costboots).." left."
+								end
+								if  material.cantorereq <= player:getItemCount(material.costore) then
+									txtrema2 = "Can be forged."
+								else
+									txtrema2 = (material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore).." left."
+								end
+						elseif itemId == material.shield then
+								if material.cantreq <= player:getItemCount(material.costshield) then
+									txtrema = "Can be forged."
+								else
+									txtrema = (material.cantreq - player:getItemCount(material.costshield)).. " "..getItemName(material.costshield).." left."
+								end
+								if  material.cantorereq <= player:getItemCount(material.costore) then
+									txtrema2 = "Can be forged."
+								else
+									txtrema2 = (material.cantorereq - player:getItemCount(material.costore)).. " "..getItemName(material.costore).." left."
+								end
+								
+						end
+						
+						if player:getMoney() < material.price then
+							if player:getBankBalance() < material.price then
+								txtprice = material.price - player:getMoney().." gold coins left."
+							else
+								txtprice = "Can be bought."	
+							end
+						else
+							txtprice = "Can be bought."	
+						end
+				if itemId == material.helmet then
+						if material2 == nil then
+							txtweapon = "[No Helmet needed to craft this item]"
+								local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costhelmet).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Helmet needed to forge: Not necessary."),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						else
+							if player:getItemCount(material2.helmet) == 0  then
+								txtweapon = "[You need to look for this helmet]"
+							else
+								txtweapon = "[Helmet in possession]"
+							end
+							
+							
+							local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costhelmet).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Helmet needed to forge: %s", getItemName(material2.helmet)),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						end
+				elseif itemId == material.armor then
+						if material2 == nil then
+							txtweapon = "[No armor needed to craft this item]"
+								local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costarmor).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Armor needed to forge: Not necessary."),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						else
+							if player:getItemCount(material2.armor) == 0  then
+								txtweapon = "[You need to look for this armor]"
+							else
+								txtweapon = "[armor in possession]"
+							end
+							
+							
+							local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costarmor).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Armor needed to forge: %s", getItemName(material2.armor)),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						end
+					
+				elseif itemId == material.legs then
+						if material2 == nil then
+							txtweapon = "[No legs needed to craft this item]"
+								local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costlegs).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Legs needed to forge: Not necessary."),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						else
+							if player:getItemCount(material2.legs) == 0  then
+								txtweapon = "[You need to look for this legs]"
+							else
+								txtweapon = "[legs in possession]"
+							end
+							
+							
+							local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costlegs).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Legs needed to forge: %s", getItemName(material2.legs)),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						end
+					
+				elseif itemId == material.boots then
+						if material2 == nil then
+							txtweapon = "[No boots needed to craft this item]"
+								local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costboots).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Boots needed to forge: Not necessary."),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						else
+							if player:getItemCount(material2.boots) == 0  then
+								txtweapon = "[You need to look for this boots]"
+							else
+								txtweapon = "[boots in possession]"
+							end
+							
+							
+							local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costboots).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Boots needed to forge: %s", getItemName(material2.boots)),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						end
+					
+				elseif itemId == material.shield then
+						if material2 == nil then
+							txtweapon = "[No shield needed to craft this item]"
+								local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),	
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costshield).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Shield needed to forge: Not necessary."),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						else
+							if player:getItemCount(material2.shield) == 0  then
+								txtweapon = "[You need to look for this shield]"
+							else
+								txtweapon = "[shield in possession]"
+							end
+							
+							
+							local description = {
+									string.format("############################"),
+									string.format("Name: %s", itemType:getName()),
+									string.format("Weight: %s", itemType:getWeight()),
+									string.format("Description: %s", itemType:getDescription()),
+									string.format("############################"),
+									string.format("Price to forge: %s", material.price.." gold coins."),
+									string.format("Remaining money: %s", txtprice),
+									string.format("############################"),
+									string.format("Material to forge:"),
+									string.format("-%s", material.cantreq.. " "..getItemName(material.costshield).."."),
+									string.format("-%s", material.cantorereq.. " "..getItemName(material.costore).."."),
+									string.format("Remaining material:"),
+									string.format("-%s", txtrema),
+									string.format("-%s", txtrema2),
+									string.format("############################"),
+									string.format("Shield needed to forge: %s", getItemName(material2.shield)),
+									string.format(txtweapon),
+									string.format("############################")	
+								}
+							text = text .. table.concat(description, "\n")
+						end
+				end				
+
+				player:showTextDialog(itemId, text)
+			end)
+			secondMenu:addButton("Back", function (player, button, choice)
+				menu:sendToPlayer(player)
+			end)
+			secondMenu:addButton("Close")
+
+			secondMenu:sendToPlayer(player)
+			
+			
+			end)
+	end
+
+	menu:addButton("Select")
+	menu:addButton("Exit")
+
+	menu:sendToPlayer(player)
+	return false
+end
+
+action:uid(35159)
+action:register()
